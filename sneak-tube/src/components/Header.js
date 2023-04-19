@@ -18,7 +18,9 @@ const Header = () => {
           src={hamlogo}
           onClick={() => toggleHandler()}
         />
-        <img className="h-7 mx-4" alt="youtube-log" src={youtubeLogo} />
+        <a href="/">
+          <img className="h-7 mx-4" alt="youtube-log" src={youtubeLogo} />
+        </a>
       </div>
       <div className="px-10">
         <div className="flex">
