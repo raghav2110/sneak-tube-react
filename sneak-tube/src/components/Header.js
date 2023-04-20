@@ -3,7 +3,10 @@ import hamlogo from "../assets/menu.png";
 import youtubeLogo from "../assets/youtube-logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../slice/appSlice";
-import { YOUTUBE_SEARCH_SUGGESTION_API } from "../utils/constant";
+import {
+  YOUTUBE_SEARCH_SUGGESTION_API,
+  YOUTUBE_SEARCH_VIDEOS_API,
+} from "../utils/constant";
 import { cacheResults } from "../slice/searchSlice";
 
 const Header = () => {
@@ -44,6 +47,15 @@ const Header = () => {
       })
     );
   };
+
+  const showVideosOnSearch = async (s) => {
+    console.log(s, "******&&&&******");
+    const searchText = s.split(" ").join("%20");
+    const data = await fetch(YOUTUBE_SEARCH_VIDEOS_API + "&q=" + searchText);
+    const json = await data.json();
+    console.log(json);
+  };
+
   return (
     <div className="flex justify-between p-2 m-1 shadow-sm">
       <div className="flex align-middle">
@@ -81,7 +93,11 @@ const Header = () => {
             <div className="absolute bg-white py-2 px-2 my-11 w-[640px] shadow-lg rounded-lg border border-gray-100">
               <ul>
                 {suggestions.map((s) => (
-                  <li key={s} className="py-2 px-3 shadow-sm hover:bg-gray-100">
+                  <li
+                    key={s}
+                    className="py-2 px-3 shadow-sm hover:bg-gray-100"
+                    onMouseDown={() => showVideosOnSearch(s)}
+                  >
                     🔍 {s}
                   </li>
                 ))}
