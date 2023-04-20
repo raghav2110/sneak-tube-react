@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import hamlogo from "../assets/menu.png";
 import youtubeLogo from "../assets/youtube-logo.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../slice/appSlice";
 import { YOUTUBE_SEARCH_SUGGESTION_API } from "../utils/constant";
+import { cacheResults } from "../slice/searchSlice";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchCache = useSelector((store) => store.search);
 
   const dispatch = useDispatch();
   const toggleHandler = () => {
@@ -16,7 +18,13 @@ const Header = () => {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => getSearchResult(), 200);
+    const timer = setTimeout(() => {
+      if (searchCache[searchQuery]) {
+        setSuggestions(searchCache[searchQuery]);
+      } else {
+        getSearchResult();
+      }
+    }, 200);
 
     return () => {
       clearTimeout(timer);
@@ -29,6 +37,12 @@ const Header = () => {
     const data = await fetch(YOUTUBE_SEARCH_SUGGESTION_API + searchQuery);
     const json = await data.json();
     setSuggestions(json[1]);
+
+    dispatch(
+      cacheResults({
+        [searchQuery]: json[1],
+      })
+    );
   };
   return (
     <div className="flex justify-between p-2 m-1 shadow-sm">
