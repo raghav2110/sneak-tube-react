@@ -11,7 +11,7 @@ const VideoCard = ({ info }) => {
       <img
         className="rounded-lg"
         alt="thummnail"
-        src={thumbnails.standard.url}
+        src={thumbnails.standard?.url}
       />
       <ul>
         <li className=" font-bold p-2">{title}</li>
